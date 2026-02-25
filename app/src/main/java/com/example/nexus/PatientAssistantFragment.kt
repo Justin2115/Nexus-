@@ -95,43 +95,50 @@ class PatientAssistantFragment : Fragment(), TextToSpeech.OnInitListener {
     }
 
     private fun processCommand(command: String) {
-        val bed = RoomManager.beds.find { it.bedNumber == "101" } ?: return // Simulation for Bed 101
+        val bedNumber = "101" // Simulation for Bed 101
         
         var response = ""
+        val updates = mutableMapOf<String, Any>()
+
         when {
             command.contains("call nurse") -> {
-                bed.status = PatientStatus.ATTENTION_NEEDED
-                bed.lastRequest = "Call nurse"
+                updates["status"] = PatientStatus.ATTENTION_NEEDED
+                updates["lastRequest"] = "Call nurse"
                 response = "Calling the nurse. They will be with you shortly."
-                RoomManager.addLog(bed.bedNumber, "Voice Command", "Patient requested: Call nurse")
+                RoomManager.addLog(bedNumber, "Voice Command", "Patient requested: Call nurse")
             }
             command.contains("water") -> {
-                bed.status = PatientStatus.ATTENTION_NEEDED
-                bed.lastRequest = "I need water"
+                updates["status"] = PatientStatus.ATTENTION_NEEDED
+                updates["lastRequest"] = "I need water"
                 response = "I have informed the nurse that you need water."
-                RoomManager.addLog(bed.bedNumber, "Voice Command", "Patient requested: Water")
+                RoomManager.addLog(bedNumber, "Voice Command", "Patient requested: Water")
             }
             command.contains("pain") -> {
-                bed.status = PatientStatus.EMERGENCY
-                bed.lastRequest = "Pain alert"
+                updates["status"] = PatientStatus.EMERGENCY
+                updates["lastRequest"] = "Pain alert"
                 response = "I'm sorry to hear that. I've sent an emergency alert to the nurse station."
-                RoomManager.addLog(bed.bedNumber, "Voice Command", "Patient reported: Pain")
+                RoomManager.addLog(bedNumber, "Voice Command", "Patient reported: Pain")
             }
             command.contains("light") -> {
-                bed.lightOn = command.contains("on")
-                response = if (bed.lightOn) "Turning the lights on." else "Turning the lights off."
-                RoomManager.addLog(bed.bedNumber, "Voice Command", response)
+                val turnOn = command.contains("on")
+                updates["lightOn"] = turnOn
+                response = if (turnOn) "Turning the lights on." else "Turning the lights off."
+                RoomManager.addLog(bedNumber, "Voice Command", response)
             }
             command.contains("help") -> {
-                bed.status = PatientStatus.EMERGENCY
-                bed.lastRequest = "Help requested"
+                updates["status"] = PatientStatus.EMERGENCY
+                updates["lastRequest"] = "Help requested"
                 response = "Emergency help requested. Station alerted."
-                RoomManager.addLog(bed.bedNumber, "Voice Command", "Patient requested: Help")
-                com.example.nexus.data.AlertManager.registerHelpRequest(bed.bedNumber)
+                RoomManager.addLog(bedNumber, "Voice Command", "Patient requested: Help")
+                com.example.nexus.data.AlertManager.registerHelpRequest(bedNumber)
             }
             else -> {
                 response = "I'm sorry, I didn't catch that. Could you repeat?"
             }
+        }
+        
+        if (updates.isNotEmpty()) {
+            RoomManager.updateBedStatus(bedNumber, updates)
         }
         
         binding.tvAiReply.text = response

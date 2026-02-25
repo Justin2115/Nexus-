@@ -28,16 +28,22 @@ class NurseDashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = BedAdapter(RoomManager.beds) { bed ->
-            // Acknowledge logic
-            bed.status = PatientStatus.NORMAL
-            bed.fallAlert = false
-            RoomManager.addLog(bed.bedNumber, "Acknowledge", "Nurse acknowledged status for Bed ${bed.bedNumber}")
-            adapter.notifyDataSetChanged()
-        }
-
         binding.rvBeds.layoutManager = LinearLayoutManager(context)
-        binding.rvBeds.adapter = adapter
+        
+        RoomManager.listenToBeds { beds ->
+            if (_binding == null) return@listenToBeds
+            
+            adapter = BedAdapter(beds) { bed ->
+                // Acknowledge logic
+                val updates = mapOf(
+                    "status" to PatientStatus.NORMAL,
+                    "fallAlert" to false
+                )
+                RoomManager.updateBedStatus(bed.bedNumber, updates)
+                RoomManager.addLog(bed.bedNumber, "Acknowledge", "Nurse acknowledged status for Bed ${bed.bedNumber}")
+            }
+            binding.rvBeds.adapter = adapter
+        }
     }
 
     override fun onResume() {

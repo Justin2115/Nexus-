@@ -20,11 +20,11 @@ object AlertManager {
     }
 
     private fun triggerEmergency(bedNumber: String, reason: String) {
-        val bed = RoomManager.beds.find { it.bedNumber == bedNumber }
-        bed?.let {
-            it.status = PatientStatus.EMERGENCY
-            it.lastRequest = "SYSTEM ALERT: $reason"
-            RoomManager.addLog(bedNumber, "Emergency", "System triggered emergency: $reason")
-        }
+        val updates = mapOf(
+            "status" to PatientStatus.EMERGENCY,
+            "lastRequest" to "SYSTEM ALERT: $reason"
+        )
+        RoomManager.updateBedStatus(bedNumber, updates)
+        RoomManager.addLog(bedNumber, "Emergency", "System triggered emergency: $reason")
     }
 }

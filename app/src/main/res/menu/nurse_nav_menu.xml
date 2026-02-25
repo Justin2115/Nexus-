@@ -6,8 +6,8 @@
         android:title="Nurse Dashboard" />
     <item
         android:id="@+id/navigation_controls"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="Room Controls" />
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Room &amp; Settings" />
     <item
         android:id="@+id/navigation_simulator"
         android:icon="@android:drawable/ic_menu_view"
@@ -16,8 +16,4 @@
         android:id="@+id/navigation_logs"
         android:icon="@android:drawable/ic_menu_recent_history"
         android:title="Logs" />
-    <item
-        android:id="@+id/navigation_settings"
-        android:icon="@android:drawable/ic_menu_manage"
-        android:title="Settings" />
 </menu>

@@ -6,14 +6,10 @@
         android:title="Patient AI" />
     <item
         android:id="@+id/navigation_controls"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="Room Controls" />
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Room &amp; Settings" />
     <item
         android:id="@+id/navigation_simulator"
         android:icon="@android:drawable/ic_menu_view"
         android:title="Simulation" />
-    <item
-        android:id="@+id/navigation_settings"
-        android:icon="@android:drawable/ic_menu_manage"
-        android:title="Settings" />
 </menu>

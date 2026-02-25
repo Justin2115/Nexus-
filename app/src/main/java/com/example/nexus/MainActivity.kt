@@ -2,6 +2,7 @@ package com.example.nexus
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.nexus.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -18,6 +19,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // Apply persistent theme
+        val sharedPref = getSharedPreferences("NexusSettings", android.content.Context.MODE_PRIVATE)
+        val isDarkMode = sharedPref.getBoolean("dark_mode", false)
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
         auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) {
             startActivity(Intent(this, LoginActivity::class.java))
@@ -64,10 +74,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.navigation_logs -> {
                     loadFragment(LogFragment())
-                    true
-                }
-                R.id.navigation_settings -> {
-                    loadFragment(SettingsFragment())
                     true
                 }
                 else -> false
