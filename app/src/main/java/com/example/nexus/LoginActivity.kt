@@ -35,25 +35,61 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            binding.progressBar.visibility = View.VISIBLE
-            binding.loginButton.visibility = View.GONE
+            setLoading(true)
 
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
-                    binding.progressBar.visibility = View.GONE
-                    binding.loginButton.visibility = View.VISIBLE
-
+                    setLoading(false)
                     if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
+                        startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     } else {
-                        // If sign in fails, display a message to the user.
-                        Toast.makeText(baseContext, "Authentication failed: ${task.exception?.message}",
+                        Toast.makeText(baseContext, "Login failed: ${task.exception?.message}",
                             Toast.LENGTH_SHORT).show()
                     }
                 }
+        }
+
+        binding.signUpButton.setOnClickListener {
+            val email = binding.emailEditText.text.toString().trim()
+            val password = binding.passwordEditText.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please enter email and password to sign up", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (password.length < 6) {
+                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            setLoading(true)
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    setLoading(false)
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    } else {
+                        Toast.makeText(baseContext, "Sign up failed: ${task.exception?.message}",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+    }
+
+    private fun setLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+            binding.loginButton.visibility = View.GONE
+            binding.signUpButton.visibility = View.GONE
+        } else {
+            binding.progressBar.visibility = View.GONE
+            binding.loginButton.visibility = View.VISIBLE
+            binding.signUpButton.visibility = View.VISIBLE
         }
     }
 }

@@ -29,21 +29,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.bottomNavigation
-
-        // Handle role-based visibility
+        
+        // Handle role-based navigation and menu
         val userEmail = auth.currentUser?.email ?: ""
         val isNurse = userEmail.contains("admin") || userEmail.contains("nurse")
         
-        if (!isNurse) {
-            // If not a nurse/admin, hide Nurse Dashboard and Logs
-            navView.menu.findItem(R.id.navigation_nurse).isVisible = false
-            navView.menu.findItem(R.id.navigation_logs).isVisible = false
-            navView.selectedItemId = R.id.navigation_patient
-            loadFragment(PatientAssistantFragment())
-        } else {
-            // Default for Nurse
+        if (isNurse) {
+            navView.inflateMenu(R.menu.nurse_nav_menu)
             navView.selectedItemId = R.id.navigation_nurse
             loadFragment(NurseDashboardFragment())
+        } else {
+            navView.inflateMenu(R.menu.bed_nav_menu)
+            navView.selectedItemId = R.id.navigation_patient
+            loadFragment(PatientAssistantFragment())
         }
 
         navView.setOnItemSelectedListener { item ->
@@ -66,6 +64,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.navigation_logs -> {
                     loadFragment(LogFragment())
+                    true
+                }
+                R.id.navigation_settings -> {
+                    loadFragment(SettingsFragment())
                     true
                 }
                 else -> false

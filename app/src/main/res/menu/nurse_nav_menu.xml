@@ -5,10 +5,6 @@
         android:icon="@android:drawable/ic_menu_agenda"
         android:title="Nurse Dashboard" />
     <item
-        android:id="@+id/navigation_patient"
-        android:icon="@android:drawable/ic_btn_speak_now"
-        android:title="Patient AI" />
-    <item
         android:id="@+id/navigation_controls"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="Room Controls" />
