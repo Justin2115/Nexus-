@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tv_simulator_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Motion &amp; Fall Simulator"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/hospital_blue_dark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_simulator_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Simulate bed sensors for Bed 101"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_simulator_title" />
+
+    <Button
+        android:id="@+id/btn_left_bed"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="32dp"
+        android:text="Patient Left Bed"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_simulator_desc" />
+
+    <Button
+        android:id="@+id/btn_no_movement"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="16dp"
+        android:text="No Movement Detected"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/btn_left_bed" />
+
+    <Button
+        android:id="@+id/btn_fall_detected"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="16dp"
+        android:text="FALL DETECTED"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/emergency_red"
+        app:layout_constraintTop_toBottomOf="@id/btn_no_movement" />
+
+    <Button
+        android:id="@+id/btn_stop_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Stop Alarm"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_fall_detected" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bed_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="2dp"
+    app:strokeColor="@color/hospital_blue_light">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_bed_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bed 101"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Status: "
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_bed_number" />
+
+        <TextView
+            android:id="@+id/tv_patient_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Normal"
+            app:layout_constraintBottom_toBottomOf="@id/tv_status_label"
+            app:layout_constraintStart_toEndOf="@id/tv_status_label"
+            app:layout_constraintTop_toTopOf="@id/tv_status_label" />
+
+        <TextView
+            android:id="@+id/tv_last_request_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Last Request: "
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_status_label" />
+
+        <TextView
+            android:id="@+id/tv_last_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None"
+            app:layout_constraintBottom_toBottomOf="@id/tv_last_request_label"
+            app:layout_constraintStart_toEndOf="@id/tv_last_request_label"
+            app:layout_constraintTop_toTopOf="@id/tv_last_request_label" />
+
+        <TextView
+            android:id="@+id/tv_motion_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Motion: "
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_last_request_label" />
+
+        <TextView
+            android:id="@+id/tv_motion_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No motion"
+            app:layout_constraintBottom_toBottomOf="@id/tv_motion_label"
+            app:layout_constraintStart_toEndOf="@id/tv_motion_label"
+            app:layout_constraintTop_toTopOf="@id/tv_motion_label" />
+
+        <TextView
+            android:id="@+id/tv_fall_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="FALL ALERT"
+            android:textColor="@color/emergency_red"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_motion_label" />
+
+        <Button
+            android:id="@+id/btn_acknowledge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/hospital_blue_primary"
+            android:text="Acknowledge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_fall_alert" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

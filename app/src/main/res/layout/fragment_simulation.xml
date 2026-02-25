@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Patient Activity Simulation"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/hospital_blue_dark"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btn_left_bed"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Trigger: Patient Left Bed"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_no_movement"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Trigger: No Movement"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_fall_detected"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="EMERGENCY: FALL DETECTED"
+            android:backgroundTint="@color/emergency_red"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_stop_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="STOP ALARM"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/hospital_gray_light"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Touchless Gesture Simulation"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/hospital_blue_dark"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btn_swipe_up"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Simulate Swipe Up\n(Open Report)"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_swipe_left"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Simulate Swipe Left\n(Mute Alarm)"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/btn_swipe_right"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Simulate Swipe Right\n(Lights ON)"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+</ScrollView>

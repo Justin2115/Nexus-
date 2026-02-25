@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tv_assistant_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Smart Patient Assistant"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/hospital_blue_dark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_ai_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/hospital_blue_light"
+        app:layout_constraintTop_toBottomOf="@id/tv_assistant_title">
+
+        <TextView
+            android:id="@+id/tv_ai_reply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:text="How can I help you today?"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:textColor="@color/black" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tv_speech_output"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="..."
+        android:textSize="18sp"
+        android:textColor="@color/hospital_blue_primary"
+        app:layout_constraintTop_toBottomOf="@id/card_ai_reply" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_mic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="TAP TO SPEAK"
+        android:textSize="20sp"
+        app:icon="@android:drawable/ic_btn_speak_now"
+        app:iconPadding="16dp"
+        app:iconSize="48dp"
+        app:backgroundTint="@color/hospital_blue_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_commands_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Say: 'Call nurse', 'Water', 'Pain', etc."
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/fab_mic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

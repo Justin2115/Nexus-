@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_nurse"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Nurse Dashboard" />
+    <item
+        android:id="@+id/navigation_patient"
+        android:icon="@android:drawable/ic_btn_speak_now"
+        android:title="Patient AI" />
+    <item
+        android:id="@+id/navigation_controls"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="Room Controls" />
+    <item
+        android:id="@+id/navigation_simulator"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="Simulation" />
+    <item
+        android:id="@+id/navigation_logs"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="Logs" />
+</menu>
