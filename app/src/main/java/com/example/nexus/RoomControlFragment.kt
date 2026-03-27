@@ -18,6 +18,7 @@ class RoomControlFragment : Fragment() {
 
     private var _binding: FragmentRoomControlBinding? = null
     private val binding get() = _binding!!
+    private var bedsListener: com.google.firebase.database.ValueEventListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,27 +35,26 @@ class RoomControlFragment : Fragment() {
         val bedNumber = "101" // Simulation for Bed 101
         
         // Sync with Firebase
-        RoomManager.listenToBeds { beds ->
+        bedsListener = RoomManager.listenToBeds { beds ->
             val bed = beds.find { it.bedNumber == bedNumber } ?: return@listenToBeds
             if (_binding == null) return@listenToBeds
             
+            // Disable listeners temporarily to prevent recursion
+            binding.switchLights.setOnCheckedChangeListener(null)
+            binding.switchFan.setOnCheckedChangeListener(null)
+            
             binding.switchLights.isChecked = bed.lightOn
             binding.switchFan.isChecked = bed.fanOn
+            
+            // Re-enable listeners
+            setupControlListeners(bedNumber)
         }
 
-        binding.switchLights.setOnCheckedChangeListener { _, isChecked ->
-            RoomManager.updateBedStatus(bedNumber, mapOf("lightOn" to isChecked))
-            RoomManager.addLog(bedNumber, "IoT Control", "Lights toggled: $isChecked")
-        }
-
-        binding.switchFan.setOnCheckedChangeListener { _, isChecked ->
-            RoomManager.updateBedStatus(bedNumber, mapOf("fanOn" to isChecked))
-            RoomManager.addLog(bedNumber, "IoT Control", "Fan toggled: $isChecked")
-        }
+        setupControlListeners(bedNumber)
 
         binding.btnEmergencyMode.setOnClickListener {
             val updates = mapOf(
-                "status" to PatientStatus.EMERGENCY,
+                "status" to PatientStatus.EMERGENCY.name,
                 "lastRequest" to "Manual Emergency Button"
             )
             RoomManager.updateBedStatus(bedNumber, updates)
@@ -91,8 +91,21 @@ class RoomControlFragment : Fragment() {
         }
     }
 
+    private fun setupControlListeners(bedNumber: String) {
+        binding.switchLights.setOnCheckedChangeListener { _, isChecked ->
+            RoomManager.updateBedStatus(bedNumber, mapOf("lightOn" to isChecked))
+            RoomManager.addLog(bedNumber, "IoT Control", "Lights toggled: $isChecked")
+        }
+
+        binding.switchFan.setOnCheckedChangeListener { _, isChecked ->
+            RoomManager.updateBedStatus(bedNumber, mapOf("fanOn" to isChecked))
+            RoomManager.addLog(bedNumber, "IoT Control", "Fan toggled: $isChecked")
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        bedsListener?.let { RoomManager.removeListener(it) }
         _binding = null
     }
 }

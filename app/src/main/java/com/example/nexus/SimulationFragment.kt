@@ -17,6 +17,8 @@ class SimulationFragment : Fragment() {
     private var _binding: FragmentSimulationBinding? = null
     private val binding get() = _binding!!
     private var alarmRingtone: Ringtone? = null
+    private var bedsListener: com.google.firebase.database.ValueEventListener? = null
+    private var bed: com.example.nexus.data.BedStatus? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,26 +32,37 @@ class SimulationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        val bed = RoomManager.beds.find { it.bedNumber == "101" } ?: return
+        bedsListener = RoomManager.listenToBeds { beds ->
+            bed = beds.find { it.bedNumber == "101" }
+        }
 
         // Motion Simulation
         binding.btnLeftBed.setOnClickListener {
-            bed.motionActivity = "Left bed"
-            bed.status = PatientStatus.ATTENTION_NEEDED
-            RoomManager.addLog(bed.bedNumber, "Sensor", "Patient left bed")
+            bed?.let {
+                it.motionActivity = "Left bed"
+                it.status = PatientStatus.ATTENTION_NEEDED
+                RoomManager.updateBedStatus(it.bedNumber, mapOf("motionActivity" to it.motionActivity, "status" to it.status.name))
+                RoomManager.addLog(it.bedNumber, "Sensor", "Patient left bed")
+            }
         }
 
         binding.btnNoMovement.setOnClickListener {
-            bed.motionActivity = "No movement"
-            bed.status = PatientStatus.ATTENTION_NEEDED
-            RoomManager.addLog(bed.bedNumber, "Sensor", "No movement detected for long time")
+            bed?.let {
+                it.motionActivity = "No movement"
+                it.status = PatientStatus.ATTENTION_NEEDED
+                RoomManager.updateBedStatus(it.bedNumber, mapOf("motionActivity" to it.motionActivity, "status" to it.status.name))
+                RoomManager.addLog(it.bedNumber, "Sensor", "No movement detected for long time")
+            }
         }
 
         binding.btnFallDetected.setOnClickListener {
-            bed.fallAlert = true
-            bed.status = PatientStatus.EMERGENCY
-            RoomManager.addLog(bed.bedNumber, "Emergency", "FALL DETECTED")
-            startAlarm()
+            bed?.let {
+                it.fallAlert = true
+                it.status = PatientStatus.EMERGENCY
+                RoomManager.updateBedStatus(it.bedNumber, mapOf("fallAlert" to true, "status" to it.status.name))
+                RoomManager.addLog(it.bedNumber, "Emergency", "FALL DETECTED")
+                startAlarm()
+            }
         }
 
         binding.btnStopAlarm.setOnClickListener {
@@ -58,20 +71,27 @@ class SimulationFragment : Fragment() {
 
         // Gesture Simulation
         binding.btnSwipeUp.setOnClickListener {
-            RoomManager.addLog(bed.bedNumber, "Gesture", "Swipe Up: Opening Medical Report")
-            Toast.makeText(context, "Opening Medical Report...", Toast.LENGTH_SHORT).show()
+            bed?.let {
+                RoomManager.addLog(it.bedNumber, "Gesture", "Swipe Up: Opening Medical Report")
+                Toast.makeText(context, "Opening Medical Report...", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.btnSwipeLeft.setOnClickListener {
-            RoomManager.addLog(bed.bedNumber, "Gesture", "Swipe Left: Muting Alarm")
-            Toast.makeText(context, "Alarm Muted", Toast.LENGTH_SHORT).show()
-            stopAlarm()
+            bed?.let {
+                RoomManager.addLog(it.bedNumber, "Gesture", "Swipe Left: Muting Alarm")
+                Toast.makeText(context, "Alarm Muted", Toast.LENGTH_SHORT).show()
+                stopAlarm()
+            }
         }
 
         binding.btnSwipeRight.setOnClickListener {
-            bed.lightOn = true
-            RoomManager.addLog(bed.bedNumber, "Gesture", "Swipe Right: Lights ON")
-            Toast.makeText(context, "Lights ON", Toast.LENGTH_SHORT).show()
+            bed?.let {
+                it.lightOn = true
+                RoomManager.updateBedStatus(it.bedNumber, mapOf("lightOn" to true))
+                RoomManager.addLog(it.bedNumber, "Gesture", "Swipe Right: Lights ON")
+                Toast.makeText(context, "Lights ON", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -91,6 +111,7 @@ class SimulationFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bedsListener?.let { RoomManager.removeListener(it) }
         stopAlarm()
         _binding = null
     }

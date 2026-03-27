@@ -102,19 +102,19 @@ class PatientAssistantFragment : Fragment(), TextToSpeech.OnInitListener {
 
         when {
             command.contains("call nurse") -> {
-                updates["status"] = PatientStatus.ATTENTION_NEEDED
+                updates["status"] = PatientStatus.ATTENTION_NEEDED.name
                 updates["lastRequest"] = "Call nurse"
                 response = "Calling the nurse. They will be with you shortly."
                 RoomManager.addLog(bedNumber, "Voice Command", "Patient requested: Call nurse")
             }
             command.contains("water") -> {
-                updates["status"] = PatientStatus.ATTENTION_NEEDED
+                updates["status"] = PatientStatus.ATTENTION_NEEDED.name
                 updates["lastRequest"] = "I need water"
                 response = "I have informed the nurse that you need water."
                 RoomManager.addLog(bedNumber, "Voice Command", "Patient requested: Water")
             }
             command.contains("pain") -> {
-                updates["status"] = PatientStatus.EMERGENCY
+                updates["status"] = PatientStatus.EMERGENCY.name
                 updates["lastRequest"] = "Pain alert"
                 response = "I'm sorry to hear that. I've sent an emergency alert to the nurse station."
                 RoomManager.addLog(bedNumber, "Voice Command", "Patient reported: Pain")
@@ -126,7 +126,7 @@ class PatientAssistantFragment : Fragment(), TextToSpeech.OnInitListener {
                 RoomManager.addLog(bedNumber, "Voice Command", response)
             }
             command.contains("help") -> {
-                updates["status"] = PatientStatus.EMERGENCY
+                updates["status"] = PatientStatus.EMERGENCY.name
                 updates["lastRequest"] = "Help requested"
                 response = "Emergency help requested. Station alerted."
                 RoomManager.addLog(bedNumber, "Voice Command", "Patient requested: Help")

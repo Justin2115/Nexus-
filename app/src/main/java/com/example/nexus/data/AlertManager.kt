@@ -21,7 +21,7 @@ object AlertManager {
 
     private fun triggerEmergency(bedNumber: String, reason: String) {
         val updates = mapOf(
-            "status" to PatientStatus.EMERGENCY,
+            "status" to PatientStatus.EMERGENCY.name,
             "lastRequest" to "SYSTEM ALERT: $reason"
         )
         RoomManager.updateBedStatus(bedNumber, updates)

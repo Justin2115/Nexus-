@@ -17,9 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        
-        // Apply persistent theme
+        // Apply persistent theme before super.onCreate
         val sharedPref = getSharedPreferences("NexusSettings", android.content.Context.MODE_PRIVATE)
         val isDarkMode = sharedPref.getBoolean("dark_mode", false)
         if (isDarkMode) {
@@ -27,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
+
+        super.onCreate(savedInstanceState)
 
         auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) {
@@ -45,10 +45,12 @@ class MainActivity : AppCompatActivity() {
         val isNurse = userEmail.contains("admin") || userEmail.contains("nurse")
         
         if (isNurse) {
+            navView.menu.clear()
             navView.inflateMenu(R.menu.nurse_nav_menu)
             navView.selectedItemId = R.id.navigation_nurse
             loadFragment(NurseDashboardFragment())
         } else {
+            navView.menu.clear()
             navView.inflateMenu(R.menu.bed_nav_menu)
             navView.selectedItemId = R.id.navigation_patient
             loadFragment(PatientAssistantFragment())

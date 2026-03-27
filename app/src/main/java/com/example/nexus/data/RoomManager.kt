@@ -33,26 +33,31 @@ object RoomManager {
     private val bedsRef = database.child("beds")
     private val logsRef = database.child("logs")
 
-    val beds = mutableListOf<BedStatus>()
+    val beds = mutableListOf<BedStatus>().apply {
+        add(BedStatus(1, "101"))
+        add(BedStatus(2, "102"))
+        add(BedStatus(3, "103"))
+        add(BedStatus(4, "104"))
+    }
     val logs = mutableListOf<MedicalLog>()
 
     init {
-        // Initialize local beds if empty
-        if (beds.isEmpty()) {
-            val initialBeds = listOf(
-                BedStatus(1, "101"),
-                BedStatus(2, "102"),
-                BedStatus(3, "103"),
-                BedStatus(4, "104")
-            )
-            initialBeds.forEach { bed ->
-                bedsRef.child(bed.bedNumber).get().addOnSuccessListener { snapshot ->
-                    if (!snapshot.exists()) {
+        bedsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists() || snapshot.childrenCount == 0L) {
+                    val initialBeds = listOf(
+                        BedStatus(1, "101"),
+                        BedStatus(2, "102"),
+                        BedStatus(3, "103"),
+                        BedStatus(4, "104")
+                    )
+                    initialBeds.forEach { bed ->
                         bedsRef.child(bed.bedNumber).setValue(bed)
                     }
                 }
             }
-        }
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
     fun updateBedStatus(bedNumber: String, updates: Map<String, Any>) {
@@ -64,8 +69,8 @@ object RoomManager {
         logsRef.push().setValue(log)
     }
     
-    fun listenToBeds(callback: (List<BedStatus>) -> Unit) {
-        bedsRef.addValueEventListener(object : ValueEventListener {
+    fun listenToBeds(callback: (List<BedStatus>) -> Unit): ValueEventListener {
+        val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val updatedBeds = mutableListOf<BedStatus>()
                 for (bedSnapshot in snapshot.children) {
@@ -77,6 +82,12 @@ object RoomManager {
                 callback(updatedBeds)
             }
             override fun onCancelled(error: DatabaseError) {}
-        })
+        }
+        bedsRef.addValueEventListener(listener)
+        return listener
+    }
+
+    fun removeListener(listener: ValueEventListener) {
+        bedsRef.removeEventListener(listener)
     }
 }

@@ -15,6 +15,7 @@ class NurseDashboardFragment : Fragment() {
     private var _binding: FragmentNurseDashboardBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: BedAdapter
+    private var bedsListener: com.google.firebase.database.ValueEventListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,30 +31,34 @@ class NurseDashboardFragment : Fragment() {
 
         binding.rvBeds.layoutManager = LinearLayoutManager(context)
         
-        RoomManager.listenToBeds { beds ->
+        // Initialize adapter immediately with existing data (or empty) to avoid "No adapter attached"
+        adapter = BedAdapter(RoomManager.beds) { bed ->
+            val updates = mapOf(
+                "status" to PatientStatus.NORMAL.name,
+                "fallAlert" to false
+            )
+            RoomManager.updateBedStatus(bed.bedNumber, updates)
+            RoomManager.addLog(bed.bedNumber, "Acknowledge", "Nurse acknowledged status for Bed ${bed.bedNumber}")
+        }
+        binding.rvBeds.adapter = adapter
+        
+        bedsListener = RoomManager.listenToBeds { beds ->
             if (_binding == null) return@listenToBeds
-            
-            adapter = BedAdapter(beds) { bed ->
-                // Acknowledge logic
-                val updates = mapOf(
-                    "status" to PatientStatus.NORMAL,
-                    "fallAlert" to false
-                )
-                RoomManager.updateBedStatus(bed.bedNumber, updates)
-                RoomManager.addLog(bed.bedNumber, "Acknowledge", "Nurse acknowledged status for Bed ${bed.bedNumber}")
-            }
-            binding.rvBeds.adapter = adapter
+            adapter.updateData(beds)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        // Refresh data when returning to this screen
-        adapter.notifyDataSetChanged()
+        // Refresh data when returning to this screen if adapter is ready
+        if (::adapter.isInitialized) {
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bedsListener?.let { RoomManager.removeListener(it) }
         _binding = null
     }
 }

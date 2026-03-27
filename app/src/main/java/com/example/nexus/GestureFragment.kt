@@ -13,6 +13,8 @@ class GestureFragment : Fragment() {
 
     private var _binding: FragmentGestureBinding? = null
     private val binding get() = _binding!!
+    private var bedsListener: com.google.firebase.database.ValueEventListener? = null
+    private var bed: com.example.nexus.data.BedStatus? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,29 +28,37 @@ class GestureFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        val bed = RoomManager.beds.find { it.bedNumber == "101" } ?: return
+        bedsListener = RoomManager.listenToBeds { beds ->
+            bed = beds.find { it.bedNumber == "101" }
+        }
 
         binding.btnSwipeUp.setOnClickListener {
-            RoomManager.addLog(bed.bedNumber, "Gesture", "Swipe Up: Opening Medical Report")
-            Toast.makeText(context, "Opening Medical Report...", Toast.LENGTH_SHORT).show()
-            // We'll show a simple dialog or toast for report
+            bed?.let {
+                RoomManager.addLog(it.bedNumber, "Gesture", "Swipe Up: Opening Medical Report")
+                Toast.makeText(context, "Opening Medical Report...", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.btnSwipeLeft.setOnClickListener {
-            RoomManager.addLog(bed.bedNumber, "Gesture", "Swipe Left: Muting Alarm")
-            Toast.makeText(context, "Alarm Muted", Toast.LENGTH_SHORT).show()
-            // Logic to mute alarm could go here if we had a global alarm manager
+            bed?.let {
+                RoomManager.addLog(it.bedNumber, "Gesture", "Swipe Left: Muting Alarm")
+                Toast.makeText(context, "Alarm Muted", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.btnSwipeRight.setOnClickListener {
-            bed.lightOn = true
-            RoomManager.addLog(bed.bedNumber, "Gesture", "Swipe Right: Lights ON")
-            Toast.makeText(context, "Lights ON", Toast.LENGTH_SHORT).show()
+            bed?.let {
+                it.lightOn = true
+                RoomManager.updateBedStatus(it.bedNumber, mapOf("lightOn" to true))
+                RoomManager.addLog(it.bedNumber, "Gesture", "Swipe Right: Lights ON")
+                Toast.makeText(context, "Lights ON", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bedsListener?.let { RoomManager.removeListener(it) }
         _binding = null
     }
 }
